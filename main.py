@@ -44,7 +44,11 @@ class textRactor:
         
         with sr.AudioFile(dest) as source:
             audio_data = r.record(source)
-            textData = r.recognize_google(audio_data)
+            try:
+                textData = r.recognize_google(audio_data)
+            except Exception as e:
+                logging.warning(e)
+                textData = "Err: 😒 Either you dont know how to talk or you have talked enough for today. If you did, come back tommorrow 😪 cuz I am not understanding your language"
         delete(fileName)
         return textData, dest
 
@@ -58,11 +62,36 @@ logging.warning('Bot started...')
 
 bot = telebot.TeleBot(apiKey)
 
-@bot.message_handler(commands=["start","help"]) # Message handlers for /start and /help
+@bot.message_handler(commands=["start"]) # Message handlers for /start
 def greet(message):
-    logging.info(f"👉 {message.text} from {message.from_user.first_name}")
+    logging.info(f"👉 {message.from_user.first_name} Started interraction..")
     bot.reply_to(message, f"""
-    Hello {message.from_user.first_name}
+    \nHello {message.from_user.first_name} 🤙,
+    \nType /help to see how to use this bot! ✌️
+    \nFeel free to use me as much as you want.
+    \nBut dont forget about my poor developer, 😕 just remind of him on every message you send
+    \nClick here https://github.com/psychoSherlock to checkout many other projects by my developer Athul Prakash NJ 🥱
+
+    """)
+
+@bot.message_handler(commands=['help'])
+def botHelp(message):
+    bot.reply_to(message, """
+    What do I do? 🤔
+    
+    \nNothing much.
+    \n👉 Send me a picture and I will extract all the texts I can find from it (DONT USE ME FOR HOMEWORK 😜)
+
+    \n👉 I can also extract all the text from a voice message. Send me a voice message and I will reply with the text I could find.
+
+    \nRules?
+    \n👉 First Rule: There are no rules!😜
+    \n👉 Second Rule: Follow the first one!😉
+
+    \nHow do you work?
+    \n👉 Read the code, you asshole, its available on https://github.com/psychoSherlock
+
+    \nHave fun, and remember, my developer is great 😒
     """)
 
 tr = textRactor()
@@ -98,9 +127,11 @@ def voice(message):
     file_info = bot.get_file(fileID)
     voice = bot.download_file(file_info.file_path) # Downloads the file
     logging.warning(f"{user} send a voice")
-    bot.reply_to(message, "🤨 What did you say?👂 Lemme listen carefully")
-    
+    bot.reply_to(message, "🤨 What did you say? Lemme listen carefully👂")
+
     converted, dest = tr.recogniseOgg(voice, user)
+
+        
     bot.reply_to(message, converted)
 
     delete(dest)
