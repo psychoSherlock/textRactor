@@ -1,3 +1,5 @@
 textRactor.code-workspace
 .env
 api.key
+images/
+logs.log
