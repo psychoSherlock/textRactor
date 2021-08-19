@@ -1,0 +1,1 @@
+# Just a simple telegram bot, that would convert an given image to text
