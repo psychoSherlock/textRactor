@@ -3,3 +3,4 @@ textRactor.code-workspace
 api.key
 images/
 logs.log
+test*
