@@ -27,21 +27,21 @@ class textRactor:
         img = Image.open(imagePath)
         imageData = pytesseract.image_to_string(img)
         return imageData
-    
+
     def saveAudio(self, audio, name):
         randomNumber = generateRandom()
         fileName = f"audios/{name}_{randomNumber}.jpg"
-    
+
     def recogniseOgg(self,data, name):
         output = "test.wav"
         randomNumber = generateRandom()
         fileName = f"audios/{name}_{randomNumber}.ogg"
         with open(fileName, 'wb') as ogg:
             ogg.write(data)
-        
+
         dest = fileName + '.wav'
         sound = AudioSegment.from_ogg(fileName).export(dest, format="wav")
-        
+
         with sr.AudioFile(dest) as source:
             audio_data = r.record(source)
             try:
@@ -54,7 +54,6 @@ class textRactor:
 
 with open('api.key') as f:
     apiKey = f.read();
-
 
 logging.basicConfig(format='%(asctime)s - %(message)s', datefmt='%d-%b-%y %H:%M:%S', handlers=[logging.FileHandler('logs.log'), logging.StreamHandler()])
 
@@ -78,7 +77,7 @@ def greet(message):
 def botHelp(message):
     bot.reply_to(message, """
     What do I do? 🤔
-    
+
     \nNothing much.
     \n👉 Send me a picture and I will extract all the texts I can find from it (DONT USE ME FOR HOMEWORK 😜)
 
@@ -127,11 +126,11 @@ def voice(message):
     file_info = bot.get_file(fileID)
     voice = bot.download_file(file_info.file_path) # Downloads the file
     logging.warning(f"{user} send a voice")
-    bot.reply_to(message, "🤨 What did you say? Lemme listen carefully👂")
+    bot.reply_to(message, "🤨 What did you say? Lemme listen 👂 carefully")
 
     converted, dest = tr.recogniseOgg(voice, user)
 
-        
+
     bot.reply_to(message, converted)
 
     delete(dest)
